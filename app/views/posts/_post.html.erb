@@ -21,7 +21,7 @@
 		<p><%= post.description %></p>
 		<p>
 			<span class="quiet">by</span>
-			<%= link_to post.creator.username, posts_path %> <!-- change link to user account -->
+			<%= link_to post.creator.username, user_path(post.creator) %>
 			<span class="quiet">on <%= display_datetime(post.creator.created_at) %></span>
 		</p>
 		<br>
