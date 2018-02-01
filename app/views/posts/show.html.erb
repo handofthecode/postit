@@ -1,21 +1,32 @@
-<p class='pull-right'>
-	[<%= link_to 'edit post', edit_post_path(@post) %>]
-</p>
+<% if is_owner?(@post.creator) %>
+	<p class='pull-right'>
+		[<%= link_to 'edit post', edit_post_path(@post) %>]
+	</p>
+<% end %>
 
 <p><%= render @post.categories %></p>
 <%= render 'shared/content_title', title: @post.title %>
 <p>Description: <%= @post.description %></p>
 <p>Website: <%= @post.url %>
-<h2 class="lead">Comments:</h2>
-<ol>	
-	<% @post.comments.each do |comment| %>
-		<li><%= comment.body %> ~ <a href=<%= user_path comment.user_id%>><%= comment.creator.username %></a></li>
+
+<% if logged_in? %>
+	<h5>Create Comment</h5>
+	<%= form_for [@post, @comment] do |f| %>
+		<%= render 'shared/error_notice', model: @comment %>
+
+		<%= f.text_area :body %>
+		<br>
+		<%= f.submit "Create Comment", class: "btn btn-primary" %>
 	<% end %>
-</ol>
-<h5>Create Comment</h5>
-<%= form_for [@post, @comment] do |f| %>
-	<%= f.text_area :body %>
-	<br>
-	<%= f.submit "Create Comment", class: "btn btn-primary" %>
+<% else %>
+	<hr>
+	<h4>Please login to contribute a comment</h4>
 <% end %>
-<%= link_to 'back to index', posts_path %>
+<h2 class="lead">Comments:</h2>
+<div>	
+	<% @comments.each do |comment| %>
+		<%= render 'comments/comment', comment: comment %>
+	<% end %>
+</div>
+
+<%= link_to 'back to index', posts_path, class: "span8" %>

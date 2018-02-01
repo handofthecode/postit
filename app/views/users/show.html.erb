@@ -1,4 +1,24 @@
 <%= render 'shared/content_title', title: @user.username + "'s" + " page." %>
 
+<h5><%= @user.username %>'s activity</h5>
+
+<ul class='nav nav-tabs'>
+	<li class='<%= 'active' if params[:tab].nil? %>'>
+		<%= link_to "Posts(#{@user.posts.size})", user_path(@user)%>
+	</li>
+	<li class=<%= 'active' if params[:tab] == 'comments' %>>
+		<%= link_to "Comments(#{@user.comments.size})", user_path(@user, tab: 'comments') %>
+	</li>
+</ul>
+
+<% if params[:tab].nil? %>
+	<% @posts.each do |post| %>
+		<%= render 'posts/post', post: post %>
+	<% end %>
+<% elsif %>
+	<% @comments.each do |comment| %>
+		<%= render 'comments/comment', comment: comment, show_post: true %>
+	<% end %>
+<% end %>
 <%= link_to 'back to users', users_path %> <br>
 <%= link_to 'back to posts', posts_path %>

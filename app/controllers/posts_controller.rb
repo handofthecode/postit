@@ -1,19 +1,21 @@
 class PostsController < ApplicationController
-	before_action :set_post, only: [:show, :edit, :update]
+	before_action :set_post, only: [:show, :edit, :update, :vote]
+  before_action :require_user, except: [:index, :show]
 
   def index
-  	@posts = Post.all
+  	@posts = sort_by_votes Post.all
   end
   def show
     @comment = Comment.new
-    # binding.pry
+    @comments = sort_by_votes @post.comments
   end
   def new
   	@post = Post.new
   end
   def create
   	@post = Post.new(post_params)
-  	@post.creator = User.first #TODO: change once we have authentication
+  	@post.creator = current_user
+
   	if @post.save
   		flash[:notice] = "Your post was created"
   		redirect_to posts_path
@@ -31,11 +33,20 @@ class PostsController < ApplicationController
   		render :edit
   	end
   end
+  def vote
+    vote = Vote.create(voteable: @post, vote: params[:vote], creator: current_user)
+    if vote.valid?
+      flash[:notice] = "Your vote has been counted."
+    else
+      flash[:error] = "You can only vote once per post."
+    end
+      redirect_to :back
+  end
 
   private
 
   def post_params
-  	params.require(:post).permit(:title, :url, :description)
+  	params.require(:post).permit(:title, :url, :description, category_ids: [])
   end
 
   def set_post
