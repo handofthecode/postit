@@ -7,7 +7,7 @@ class PostsController < ApplicationController
   end
   def show
     @comment = Comment.new
-    @comments = sort_by_votes @post.comments
+    # @comments = sort_by_votes @post.comments
   end
   def new
   	@post = Post.new
@@ -63,6 +63,6 @@ class PostsController < ApplicationController
   end
 
   def set_post
-  	@post = Post.find(params[:id])
+  	@post = Post.find_by slug: params[:id]
   end
 end

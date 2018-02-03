@@ -24,7 +24,7 @@
 <% end %>
 <h2 class="lead">Comments:</h2>
 <div>	
-	<% @comments.each do |comment| %>
+	<% @post.reload.comments.each do |comment| %>
 		<%= render 'comments/comment', comment: comment %>
 	<% end %>
 </div>
