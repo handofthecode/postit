@@ -22,6 +22,10 @@ class UsersController < ApplicationController
   	end
   end
   def edit
+    if current_user != @user
+      flash[:error] = "You don't have permission to do that."
+      redirect_to root_path
+    end
   end
   def update
     if @user.update(user_params)

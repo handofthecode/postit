@@ -7,9 +7,9 @@ class User < ActiveRecord::Base
 	validates :username, presence: true, uniqueness: true
 	validates :password, presence: true, on: :create, length: {minimum: 6}
 
-	before_save :generate_slug
+	before_save :generate_slug!
 
-	def generate_slug
+	def generate_slug!
 		slug = sluggify self.username
 		conflict = Category.find_by slug: slug
 		while conflict && conflict != self

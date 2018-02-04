@@ -10,9 +10,9 @@ class Post < ActiveRecord::Base
 	validates :description, presence: true, uniqueness: true
 	validates :url, presence: true
 
-	before_save :generate_slug
+	before_save :generate_slug!
 
-	def generate_slug
+	def generate_slug!
 		slug = sluggify self.title
 		conflict = Category.find_by slug: slug
 		while conflict && conflict != self
@@ -35,7 +35,6 @@ class Post < ActiveRecord::Base
 	  	slug.gsub(/\d+$/, suffix)
 	  end
   end
-
 
   def to_param
   	self.slug
