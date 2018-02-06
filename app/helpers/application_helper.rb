@@ -3,7 +3,8 @@ module ApplicationHelper
 		url.starts_with?('http') ? url : "http://#{url}"
 	end
 	def display_datetime(dt)
-		dt.strftime('%B %e, %Y at %l:%M %p')
+    dt = dt.in_time_zone(current_user.time_zone) if logged_in?
+		dt.strftime('%B %e, %Y at %l:%M %p %Z')
 	end
 	def is_owner?(creator)
     creator.id == session[:user_id]
