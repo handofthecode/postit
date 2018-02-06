@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  helper_method :current_user, :logged_in?, :sort_by_votes
+  helper_method :current_user, :logged_in?, :sort_by_votes, :admin?
 
   def sort_by_votes(collection)
     collection.sort_by{|obj| -obj.total_votes}
@@ -17,10 +17,24 @@ class ApplicationController < ActionController::Base
   	!!current_user
   end
 
+  def admin?
+    logged_in? and current_user.admin?
+  end
+
   def require_user
-    unless logged_in?
-      flash[:error] = "You must log in to do that."
-      redirect_to root_path
-    end
+    not_logged_in unless logged_in?
+  end
+
+  def require_admin
+    access_denied unless admin?
+  end
+
+  def access_denied
+    flash[:error] = "You can't do that."
+    redirect_to root_path
+  end
+  def not_logged_in
+    flash[:error] = "You must log in to do that."
+    redirect_to root_path
   end
 end

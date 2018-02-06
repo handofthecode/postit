@@ -12,7 +12,7 @@
 		<% Category.all.each do |cat| %>
 		<li><%= link_to cat.name, category_path(cat) %></li>
 		<% end %>
-	<% if logged_in? %>
+	<% if admin? %>
 		<li class='divider'></li>
 		<li>
 			<%= link_to(new_category_path) do %>
@@ -20,7 +20,7 @@
 				New Category
 			<% end %>
 		</li>
-		<% end %>
+	<% end %>
 	</ul>
 </div>
 

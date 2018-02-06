@@ -1,4 +1,4 @@
-<% if is_owner?(@post.creator) %>
+<% if @allowed_to_edit %>
 	<p class='pull-right'>
 		[<%= link_to 'edit post', edit_post_path(@post) %>]
 	</p>

@@ -1,12 +1,14 @@
 class PostsController < ApplicationController
 	before_action :set_post, only: [:show, :edit, :update, :vote]
   before_action :require_user, except: [:index, :show]
+  before_action :require_edit_access, only: [:edit, :update]
 
   def index
   	@posts = sort_by_votes Post.all
   end
   def show
     @comment = Comment.new
+    @allowed_to_edit = allowed_to_edit?
     # @comments = sort_by_votes @post.comments
   end
   def new
@@ -65,4 +67,13 @@ class PostsController < ApplicationController
   def set_post
   	@post = Post.find_by slug: params[:id]
   end
+
+  def require_edit_access
+    access_denied if !allowed_to_edit?
+  end
+
+  def allowed_to_edit?
+    @post.creator == current_user || admin?
+  end
+
 end
